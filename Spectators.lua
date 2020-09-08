@@ -5,7 +5,7 @@ local enabled = gui.Checkbox( gui.Reference('Misc', 'Part 3'), 'spectator_list',
 local hide_list = gui.Checkbox( gui.Reference('Misc', 'Part 3'), 'spectator_list_hide', 'Hide list if not spectated', false )
 local fov_change = gui.Slider( gui.Reference('Misc', 'Part 3'), 'spectator_list_fov', 'Reduce FOV', -1, 0, 180 )
 local players = {}
-local cached
+local cached, set
 
 local obsMode = {
     [4] = 'First person',
