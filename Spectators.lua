@@ -2,7 +2,6 @@ local shorten = function(s, m)local t,w,c='',0 for i=1,#s do t=t..s:sub(i,i)w=dr
 
 local window = gui.Window( 'spectate_window', 'Spectator List', 200, 200, 175, 32 )
 local enabled = gui.Checkbox( gui.Reference('Misc', 'Part 3'), 'spectator_list', 'Show Spectators', false )
-local players = {}
 local obsMode = {
     [4] = 'First person',
     [5] = 'Third person',
