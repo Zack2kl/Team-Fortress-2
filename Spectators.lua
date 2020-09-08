@@ -30,7 +30,7 @@ local getSpectators = function()
 end
 
 callbacks.Register( 'Draw', function()
-    window:SetActive( enabled:GetValue() )
+    window:SetActive( enabled:GetValue() and entities.GetLocalPlayer() )
 end)
 
 gui.Custom( window, 'spectate_list', 0, 0, 0, 0, function( x, y )
