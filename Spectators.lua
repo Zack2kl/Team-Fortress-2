@@ -17,7 +17,11 @@ local getSpectators = function()
         if target and target:GetIndex() == lpIndex then
             local mode = v:GetProp('m_iObserverMode')
             if mode > 0 then
-               players[#players + 1] = { shorten( v:GetName(), 70 ), obsMode[mode] or 'None' }
+                local name = shorten( v:GetName(), 70 )
+                local specmode = obsMode[mode] or 'None'
+                if specmode ~= 'None' then
+                    players[#players + 1] = { name, specmode }
+                end
             end
         end
     end
