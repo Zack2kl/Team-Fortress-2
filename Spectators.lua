@@ -46,6 +46,8 @@ callbacks.Register( 'Draw', function()
                 end
             end
         else
+            window:SetActive( 1 )
+
             if fov_change:GetValue() ~= -1 then
                 gui.SetValue( 'aim_fov', fov_change:GetValue() )
                 set = true
