@@ -2,6 +2,11 @@ local shorten = function(s, m)local t,w,c='',0 for i=1,#s do t=t..s:sub(i,i)w=dr
 
 local window = gui.Window( 'spectate_window', 'Spectator List', 200, 200, 175, 32 )
 local enabled = gui.Checkbox( gui.Reference('Misc', 'Part 3'), 'spectator_list', 'Show Spectators', false )
+local hide_list = gui.Checkbox( gui.Reference('Misc', 'Part 3'), 'spectator_list_hide', 'Hide list if not spectated', false )
+local fov_change = gui.Slider( gui.Reference('Misc', 'Part 3'), 'spectator_list_fov', 'Reduce FOV', -1, 0, 180 )
+local players = {}
+local cached
+
 local obsMode = {
     [4] = 'First person',
     [5] = 'Third person',
@@ -9,8 +14,6 @@ local obsMode = {
 }
 
 local getSpectators = function()
-    local players = {}
-
     local lpIndex = client.GetLocalPlayerIndex()
     for _, v in pairs( entities.FindByClass('CTFPlayer') ) do
         local target = v:GetPropEntity('m_hObserverTarget')
@@ -25,20 +28,38 @@ local getSpectators = function()
             end
         end
     end
-
-    return players
 end
 
 callbacks.Register( 'Draw', function()
-    window:SetActive( enabled:GetValue() and entities.GetLocalPlayer() )
+    if enabled:GetValue() then
+        getSpectators()
+
+        if #players == 0 then
+            window:SetActive( not hide_list:GetValue() )
+
+            if fov_change:GetValue() ~= -1 then
+                if not set then
+                    cached = gui.GetValue( 'aim_fov' )
+                else
+                    gui.SetValue( 'aim_fov', cached )
+                    set = false
+                end
+            end
+        else
+            if fov_change:GetValue() ~= -1 then
+                gui.SetValue( 'aim_fov', fov_change:GetValue() )
+                set = true
+            end
+        end
+    else
+        window:SetActive( 0 )
+    end
 end)
 
 gui.Custom( window, 'spectate_list', 0, 0, 0, 0, function( x, y )
     if not enabled:GetValue() then
         return
     end
-
-    local players = getSpectators()
 
     draw.Color( 33, 33, 33, 240 )
     draw.RoundedRectFill( x, y, x + 175, y + 30 + (#players * 25) )
@@ -75,4 +96,6 @@ gui.Custom( window, 'spectate_list', 0, 0, 0, 0, function( x, y )
             draw.TextShadow( row.x + ( row.w / 2 ) - (tW/2), row.y + (row.h/2) - (tH/2) + ( i * 25 ), item )
         end
     end
+
+    players = {}
 end)
