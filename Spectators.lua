@@ -6,6 +6,7 @@ local hide_list = gui.Checkbox( gui.Reference('Misc', 'Part 3'), 'spectator_list
 local fov_change = gui.Slider( gui.Reference('Misc', 'Part 3'), 'spectator_list_fov', 'Reduce FOV', -1, -1, 180 )
 local players = {}
 local cached, set
+local first_person
 
 local obsMode = {
     [4] = 'First person',
@@ -15,6 +16,7 @@ local obsMode = {
 
 local getSpectators = function()
     local lpIndex = client.GetLocalPlayerIndex()
+	first_person = false
     for _, v in pairs( entities.FindByClass('CTFPlayer') ) do
         local target = v:GetPropEntity('m_hObserverTarget')
         if target and target:GetIndex() == lpIndex then
@@ -24,6 +26,9 @@ local getSpectators = function()
                 local specmode = obsMode[mode] or 'None'
                 if specmode ~= 'None' then
                     players[#players + 1] = { name, specmode }
+					if mode == 4 then
+						first_person = true
+					end
                 end
             end
         end
@@ -48,7 +53,7 @@ callbacks.Register( 'Draw', function()
         else
             window:SetActive( 1 )
 
-            if fov_change:GetValue() ~= -1 then
+            if fov_change:GetValue() ~= -1 and first_person then
                 gui.SetValue( 'aim_fov', fov_change:GetValue() )
                 set = true
             end
