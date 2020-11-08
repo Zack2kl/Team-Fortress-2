@@ -38,11 +38,12 @@ end
 callbacks.Register( 'Draw', function()
     if enabled:GetValue() then
         getSpectators()
+		local val = fov_change:GetValue()
 
         if #players == 0 then
             window:SetActive( not hide_list:GetValue() )
 
-            if fov_change:GetValue() ~= -1 then
+            if val ~= -1 then
                 if not set then
                     cached = gui.GetValue( 'aim_fov' )
                 else
@@ -53,8 +54,8 @@ callbacks.Register( 'Draw', function()
         else
             window:SetActive( 1 )
 
-            if fov_change:GetValue() ~= -1 and first_person then
-                gui.SetValue( 'aim_fov', fov_change:GetValue() )
+            if val ~= -1 and first_person then
+                gui.SetValue( 'aim_fov', val )
                 set = true
             end
         end
