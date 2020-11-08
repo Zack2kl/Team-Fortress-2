@@ -5,8 +5,8 @@ local enabled = gui.Checkbox( gui.Reference('Misc', 'Part 3'), 'spectator_list',
 local hide_list = gui.Checkbox( gui.Reference('Misc', 'Part 3'), 'spectator_list_hide', 'Hide list if not spectated', false )
 local fov_change = gui.Slider( gui.Reference('Misc', 'Part 3'), 'spectator_list_fov', 'Reduce FOV', -1, -1, 180 )
 local players = {}
-local cached, set
-local first_person
+local cached = gui.GetValue( 'aim_fov' )
+local set, first_person
 
 local obsMode = {
     [4] = 'First person',
@@ -38,27 +38,22 @@ end
 callbacks.Register( 'Draw', function()
     if enabled:GetValue() then
         getSpectators()
+        window:SetActive( (#players == 0 and hide_list:GetValue()) and false or true )
+
 		local val = fov_change:GetValue()
-
-        if #players == 0 then
-            window:SetActive( not hide_list:GetValue() )
-
-            if val ~= -1 then
-                if not set then
-                    cached = gui.GetValue( 'aim_fov' )
-                else
-                    gui.SetValue( 'aim_fov', cached )
-                    set = false
-                end
-            end
-        else
-            window:SetActive( 1 )
-
-            if val ~= -1 and first_person then
-                gui.SetValue( 'aim_fov', val )
-                set = true
-            end
-        end
+		if val ~= -1 then
+			if first_person then
+				gui.SetValue( 'aim_fov', val )
+				set = true
+			else
+				if not set then
+					cached = gui.GetValue( 'aim_fov' )
+				else
+					gui.SetValue( 'aim_fov', cached )
+					set = false
+				end
+			end
+		end
     else
         window:SetActive( 0 )
     end
