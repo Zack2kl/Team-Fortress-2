@@ -17,15 +17,20 @@ local obsMode = {
 local getSpectators = function()
     local lpIndex = client.GetLocalPlayerIndex()
 	first_person = false
+
     for _, v in pairs( entities.FindByClass('CTFPlayer') ) do
         local target = v:GetPropEntity('m_hObserverTarget')
+
         if target and target:GetIndex() == lpIndex then
             local mode = v:GetProp('m_iObserverMode')
+
             if mode > 0 then
                 local name = shorten( v:GetName(), 70 )
                 local specmode = obsMode[mode] or 'None'
+
                 if specmode ~= 'None' then
                     players[#players + 1] = { name, specmode }
+
 					if mode == 4 then
 						first_person = true
 					end
