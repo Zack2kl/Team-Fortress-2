@@ -42,7 +42,7 @@ callbacks.Register( 'Draw', function()
         if #players == 0 then
             window:SetActive( not hide_list:GetValue() )
 
-            if fov_change:GetValue() ~= -1 then
+            if fov_change:GetValue() ~= -1 and first_person then
                 if not set then
                     cached = gui.GetValue( 'aim_fov' )
                 else
